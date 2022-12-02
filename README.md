@@ -1,125 +1,106 @@
-# 10 Object-Oriented Programming: Team Profile Generator
+# 12 SQL: Employee Tracker
 
 ## Your Task
 
-Your task is to build a Node.js command-line application that takes in information about employees on a software engineering team, then generates an HTML webpage that displays summaries for each person. Testing is key to making code maintainable, so you’ll also write a unit test for every part of your code and ensure that it passes each test.
+Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called **content management systems (CMS)**. Your assignment this week is to build a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.
 
-Because this application won’t be deployed, you’ll need to provide a link to a walkthrough video that demonstrates its functionality and all of the tests passing. You’ll need to submit a link to the video AND add it to the readme of your project.
-
-> **Note**: There is no starter code for this assignment.
+Because this application won’t be deployed, you’ll also need to create a walkthrough video that demonstrates its functionality and all of the following acceptance criteria being met. You’ll need to submit a link to the video and add it to the README of your project.
 
 ## User Story
 
 ```md
-AS A manager
-I WANT to generate a webpage that displays my team's basic info
-SO THAT I have quick access to their emails and GitHub profiles
+AS A business owner
+I WANT to be able to view and manage the departments, roles, and employees in my company
+SO THAT I can organize and plan my business
 ```
 
 ## Acceptance Criteria
 
 ```md
 GIVEN a command-line application that accepts user input
-WHEN I am prompted for my team members and their information
-THEN an HTML file is generated that displays a nicely formatted team roster based on user input
-WHEN I click on an email address in the HTML
-THEN my default email program opens and populates the TO field of the email with the address
-WHEN I click on the GitHub username
-THEN that GitHub profile opens in a new tab
 WHEN I start the application
-THEN I am prompted to enter the team manager’s name, employee ID, email address, and office number
-WHEN I enter the team manager’s name, employee ID, email address, and office number
-THEN I am presented with a menu with the option to add an engineer or an intern or to finish building my team
-WHEN I select the engineer option
-THEN I am prompted to enter the engineer’s name, ID, email, and GitHub username, and I am taken back to the menu
-WHEN I select the intern option
-THEN I am prompted to enter the intern’s name, ID, email, and school, and I am taken back to the menu
-WHEN I decide to finish building my team
-THEN I exit the application, and the HTML is generated
+THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
+WHEN I choose to view all departments
+THEN I am presented with a formatted table showing department names and department ids
+WHEN I choose to view all roles
+THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
+WHEN I choose to view all employees
+THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+WHEN I choose to add a department
+THEN I am prompted to enter the name of the department and that department is added to the database
+WHEN I choose to add a role
+THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
+WHEN I choose to add an employee
+THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+WHEN I choose to update an employee role
+THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 ```
 
 ## Mock-Up
 
-The following image shows a mock-up of the generated HTML’s appearance and functionality:
+The following video shows an example of the application being used from the command line:
 
-![HTML webpage titled “My Team” features five boxes listing employee names, titles, and other key info.](./Assets/10-object-oriented-programming-homework-demo.png)
-
-The styling in the image is just an example, so feel free to add your own.
+[![A video thumbnail shows the command-line employee management application with a play button overlaying the view.](./Assets/12-sql-homework-video-thumbnail.png)](https://2u-20.wistia.com/medias/2lnle7xnpk)
 
 ## Getting Started
 
-This Challenge will combine many of the skills we've covered so far. In addition to the User Story and Acceptance Criteria, we’ve provided some guidelines to help get started.
+This Challenge will require a video submission. Refer to the [Fullstack Blog Video Submission Guide](https://coding-boot-camp.github.io/full-stack/computer-literacy/video-submission-guide) for additional guidance on creating a video.
 
-Because this Challenge will require a video submission, refer to the [Fullstack Blog Video Submission Guide](https://coding-boot-camp.github.io/full-stack/computer-literacy/video-submission-guide) for additional guidance on creating a video.
+You’ll need to use the [MySQL2 package](https://www.npmjs.com/package/mysql2) to connect to your MySQL database and perform queries, the [Inquirer package](https://www.npmjs.com/package/inquirer/v/8.2.4) to interact with the user via the command line, and the [console.table package](https://www.npmjs.com/package/console.table) to print MySQL rows to the console.
 
-Your application should use [Jest](https://www.npmjs.com/package/jest) for running the unit tests and [Inquirer](https://www.npmjs.com/package/inquirer/v/8.2.4) for collecting input from the user. The application will be invoked by using the following command:
+**Important**: You will be committing a file that contains your database credentials. Make sure that your MySQL password is not used for any other personal accounts, because it will be visible on GitHub. In upcoming lessons, you will learn how to better secure this password, or you can start researching npm packages now that could help you.
 
-```bash
-node index.js
-```
+You might also want to make your queries asynchronous. MySQL2 exposes a `.promise()` function on Connections to upgrade an existing non-Promise connection to use Promises. To learn more and make your queries asynchronous, refer to the [npm documentation on MySQL2](https://www.npmjs.com/package/mysql2).
 
-It is recommended that you start with a directory structure that looks like the following example:
+Design the database schema as shown in the following image:
 
-```md
-.
-├── __tests__/             //jest tests
-│   ├── Employee.test.js
-│   ├── Engineer.test.js
-│   ├── Intern.test.js
-│   └── Manager.test.js
-├── dist/                  // rendered output (HTML) and CSS style sheet      
-├── lib/                   // classes
-├── src/                   // template helper code 
-├── .gitignore             // indicates which folders and files Git should ignore
-├── index.js               // runs the application
-└── package.json           
-```
+![Database schema includes tables labeled “employee,” role,” and “department.”](./Assets/12-sql-homework-demo-01.png)
 
-**Important**: Make sure that you remove `dist` from the `.gitignore` file so that Git will track this folder and include it when you push up to your application's repository.
+As the image illustrates, your schema should contain the following three tables:
 
-The application must include `Employee`, `Manager`, `Engineer`, and `Intern` classes. The tests for these classes (in the `_tests_` directory) must ALL pass.
+* `department`
 
-The first class is an `Employee` parent class with the following properties and methods:
+    * `id`: `INT PRIMARY KEY`
 
-* `name`
+    * `name`: `VARCHAR(30)` to hold department name
 
-* `id`
+* `role`
 
-* `email`
+    * `id`: `INT PRIMARY KEY`
 
-* `getName()`
+    * `title`: `VARCHAR(30)` to hold role title
 
-* `getId()`
+    * `salary`: `DECIMAL` to hold role salary
 
-* `getEmail()`
+    * `department_id`: `INT` to hold reference to department role belongs to
 
-* `getRole()`&mdash;returns `'Employee'`
+* `employee`
 
-The other three classes will extend `Employee`.
+    * `id`: `INT PRIMARY KEY`
 
-In addition to `Employee`'s properties and methods, `Manager` will also have the following:
+    * `first_name`: `VARCHAR(30)` to hold employee first name
 
-* `officeNumber`
+    * `last_name`: `VARCHAR(30)` to hold employee last name
 
-* `getRole()`&mdash;overridden to return `'Manager'`
+    * `role_id`: `INT` to hold reference to employee role
 
-In addition to `Employee`'s properties and methods, `Engineer` will also have the following:
+    * `manager_id`: `INT` to hold reference to another employee that is the manager of the current employee (`null` if the employee has no manager)
 
-* `github`&mdash;GitHub username
+You might want to use a separate file that contains functions for performing specific SQL queries you'll need to use. A constructor function or class could be helpful for organizing these. You might also want to include a `seeds.sql` file to pre-populate your database, making the development of individual features much easier.
 
-* `getGithub()`
+## Bonus
 
-* `getRole()`&mdash;overridden to return `'Engineer'`
+Try to add some additional functionality to your application, such as the ability to do the following:
 
-In addition to `Employee`'s properties and methods, `Intern` will also have the following:
+* Update employee managers.
 
-* `school`
+* View employees by manager.
 
-* `getSchool()`
+* View employees by department.
 
-* `getRole()`&mdash;overridden to return `'Intern'`
+* Delete departments, roles, and employees.
 
-Finally, although it’s not a requirement, consider adding validation to ensure that user input is in the proper format.
+* View the total utilized budget of a department&mdash;in other words, the combined salaries of all employees in that department.
 
 ## Grading Requirements
 
@@ -135,33 +116,31 @@ Finally, although it’s not a requirement, consider adding validation to ensure
 
 This Challenge is graded based on the following criteria:
 
-### Deliverables: 15%
-
-* A sample HTML file generated using the application must be submitted.
+### Deliverables: 10%
 
 * Your GitHub repository containing your application code.
 
-### Walkthrough Video: 32%
+### Walkthrough Video: 27%
 
-* A walkthrough video that demonstrates the functionality of the Team Profile Generator and passing tests must be submitted, and a link to the video should be included in your README file.
+* A walkthrough video that demonstrates the functionality of the employee tracker must be submitted, and a link to the video should be included in your README file.
 
-* The walkthrough video must show all four tests passing from the command line.
+* The walkthrough video must show all of the technical acceptance criteria being met.
 
 * The walkthrough video must demonstrate how a user would invoke the application from the command line.
 
-* The walkthrough video must demonstrate how a user would enter responses to all of the prompts in the application.
-
-* The walkthrough video must demonstrate a generated HTML file that matches the user input.
+* The walkthrough video must demonstrate a functional menu with the options outlined in the acceptance criteria.
 
 ### Technical Acceptance Criteria: 40%
 
 * Satisfies all of the preceding acceptance criteria plus the following:
 
-  * Uses the [Inquirer package](https://www.npmjs.com/package/inquirer/v/8.2.4).
+    * Uses the [Inquirer package](https://www.npmjs.com/package/inquirer/v/8.2.4).
 
-  * Uses the [Jest package](https://www.npmjs.com/package/jest) for a suite of unit tests.
+    * Uses the [MySQL2 package](https://www.npmjs.com/package/mysql2) to connect to a MySQL database.
 
-  * The application must have `Employee`, `Manager`, `Engineer`, and `Intern` classes.
+    * Uses the [console.table package](https://www.npmjs.com/package/console.table) to print MySQL rows to the console.
+
+* Follows the table schema outlined in the Challenge instructions.
 
 ### Repository Quality: 13%
 
@@ -173,17 +152,33 @@ This Challenge is graded based on the following criteria:
 
 * Repository contains multiple descriptive commit messages.
 
-* Repository contains a high-quality readme with description and a link to a walkthrough video.
+* Repository contains a high-quality README with description and a link to a walkthrough video.
+
+### Application Quality 10%
+
+* The application user experience is intuitive and easy to navigate.
+
+### Bonus
+
+Fulfilling any of the following can add up to 20 points to your grade. Note that the highest grade you can achieve is still 100:
+
+* Application allows users to update employee managers (2 points).
+
+* Application allows users to view employees by manager (2 points).
+
+* Application allows users to view employees by department (2 points).
+
+* Application allows users to delete departments, roles, and employees (2 points for each).
+
+* Application allows users to view the total utilized budget of a department&mdash;in other words, the combined salaries of all employees in that department (8 points).
 
 ## Review
 
-You are required to submit the following for review:
+You are required to submit BOTH of the following for review:
 
-* A walkthrough video that demonstrates the functionality of the application and passing tests.
+* A walkthrough video demonstrating the functionality of the application.
 
-* A sample HTML file generated using your application.
+* The URL of the GitHub repository, with a unique name and a README describing the project.
 
-* The URL of the GitHub repository, with a unique name and a readme describing the project.
-
----
+- - -
 © 2022 Trilogy Education Services, LLC, a 2U, Inc. brand. Confidential and Proprietary. All Rights Reserved.
